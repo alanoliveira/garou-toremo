@@ -1,5 +1,7 @@
 ﻿using Memory;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Threading;
 
 namespace GarouToremo
@@ -46,6 +48,12 @@ namespace GarouToremo
             cheats.SetPower(Cheats.Player.P1, Cheats.MAX_POWER);
             cheats.SetPower(Cheats.Player.P2, Cheats.MAX_POWER);
             cheats.SetTime(Cheats.MAX_TIME);
+
+            byte currentP1Input = cheats.GetCurrentInputByte(Cheats.Player.P1);
+            overlay.AddP1Input(currentP1Input);
+
+            byte currentP2Input = cheats.GetCurrentInputByte(Cheats.Player.P2);
+            overlay.AddP2Input(currentP2Input);
         }
     }
 }

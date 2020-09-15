@@ -12,6 +12,16 @@ namespace GarouToremo
         private const string ADDRESS_P2_POWER = "Garou.exe+2B65BF";
         private const string ADDRESS_TIMER    = "Garou.exe+2BD491";
 
+        public const byte INPUT_UP      = 0xFE;
+        public const byte INPUT_DOWN    = 0xFD;
+        public const byte INPUT_LEFT    = 0xFB;
+        public const byte INPUT_RIGHT   = 0xF7;
+        public const byte INPUT_LP      = 0xEF;
+        public const byte INPUT_LK      = 0xDF;
+        public const byte INPUT_HP      = 0xBF;
+        public const byte INPUT_HK      = 0x7F;
+        public const byte INPUT_NEUTRAL = 0xFF;
+
         public const int MAX_TIME = 0x99;
         public const int MAX_HP = 120;
         public const int MAX_POWER = 128;
