@@ -7,9 +7,13 @@ namespace GarouToremo
         private const string ADDRESS_P1_INPUT = "Garou.exe+285FD8";
         private const string ADDRESS_P1_HP    = "Garou.exe+2B648F";
         private const string ADDRESS_P1_POWER = "Garou.exe+2B64BF";
+        private const string ADDRESS_P1_X     = "Garou.exe+2B6420"; // 2 bytes
+        private const string ADDRESS_P1_Y     = "Garou.exe+2B6428"; // 2 bytes
         private const string ADDRESS_P2_INPUT = "Garou.exe+285FDC";
         private const string ADDRESS_P2_HP    = "Garou.exe+2B658F";
         private const string ADDRESS_P2_POWER = "Garou.exe+2B65BF";
+        private const string ADDRESS_P2_X     = "Garou.exe+2B6520"; // 2 bytes
+        private const string ADDRESS_P2_Y     = "Garou.exe+2B6528"; // 2 bytes
         private const string ADDRESS_TIMER    = "Garou.exe+2BD491";
 
         public const byte INPUT_UP      = 0xFE;
@@ -102,6 +106,22 @@ namespace GarouToremo
             }
 
             return (byte)garouMem.ReadByte(addr);
+        }
+
+        public int[] GetPosition(Player player)
+        {
+            string addrX = ADDRESS_P1_X;
+            string addrY = ADDRESS_P1_Y;
+            if (player == Player.P2)
+            {
+                addrX = ADDRESS_P2_X;
+                addrY = ADDRESS_P2_Y;
+            }
+
+            int x = garouMem.Read2Byte(addrX);
+            int y = garouMem.Read2Byte(addrY);
+
+            return new int[] { x, y };
         }
     }
 }
