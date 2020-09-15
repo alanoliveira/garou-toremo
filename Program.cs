@@ -37,8 +37,24 @@ namespace GarouToremo
             overlay.Run();
             this.overlay.InfoText = "GarouToremo is running";
             timer = new Timer(CheatLoop, null, 0, FPS);
-            Console.WriteLine("Press q to exit");
-            while (Console.ReadKey().Key != ConsoleKey.Q);
+            Console.WriteLine("Press m to menu or q to exit");
+            ConsoleKey k;
+            while (true)
+            {
+                k = Console.ReadKey().Key;
+
+                if (k == ConsoleKey.M)
+                {
+                    ShowMenu();
+                    Console.Clear();
+                    Console.WriteLine("Press m to menu or q to exit");
+                }
+
+                if (k == ConsoleKey.Q)
+                {
+                    break;
+                }
+            }
         }
 
         private void CheatLoop(Object o)
@@ -54,6 +70,22 @@ namespace GarouToremo
 
             byte currentP2Input = cheats.GetCurrentInputByte(Cheats.Player.P2);
             overlay.AddP2Input(currentP2Input);
+        }
+
+        private void ShowMenu()
+        {
+            Console.Clear();
+            Console.WriteLine("Press:");
+            Console.WriteLine("1 - Toggle Show Inputs [{0}]", overlay.ShowInputHistory);
+            Console.WriteLine("Any other key - Quit menu");
+            string option = Console.ReadLine();
+
+            switch (option)
+            {
+                case "1":
+                    overlay.ShowInputHistory = !overlay.ShowInputHistory;
+                    break;
+            }
         }
     }
 }

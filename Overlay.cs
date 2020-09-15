@@ -36,6 +36,7 @@ namespace GarouToremo
             }
         }
 
+        public bool ShowInputHistory = true;
         private FixedSizedQueue<byte> p1InputHistory;
         private FixedSizedQueue<byte> p2InputHistory;
 
@@ -89,8 +90,11 @@ namespace GarouToremo
             gfx.ClearScene();
 
             DrawInfoText(gfx);
-            DrawP1InputHistory(gfx);
-            DrawP2InputHistory(gfx);
+            if(ShowInputHistory)
+            {
+                DrawP1InputHistory(gfx);
+                DrawP2InputHistory(gfx);
+            }
         }
 
         private void DrawInfoText(Graphics gfx)
