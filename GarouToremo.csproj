@@ -6,6 +6,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="GameOverlay.Net" Version="4.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Reference Include="Memory">
       <HintPath>vendor\Memory.dll</HintPath>
     </Reference>

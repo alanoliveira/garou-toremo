@@ -10,6 +10,7 @@ namespace GarouToremo
 
         Cheats cheats;
         Timer timer;
+        Overlay overlay;
 
         static void Main(string[] args)
         {
@@ -26,10 +27,13 @@ namespace GarouToremo
             }
 
             cheats = new Cheats(mem);
+            overlay = new Overlay();
         }
 
         public void Run()
         {
+            overlay.Run();
+            this.overlay.InfoText = "GarouToremo is running";
             timer = new Timer(CheatLoop, null, 0, FPS);
             Console.WriteLine("Press q to exit");
             while (Console.ReadKey().Key != ConsoleKey.Q);
