@@ -37,23 +37,19 @@ namespace GarouToremo
             overlay.Run();
             this.overlay.InfoText = "GarouToremo is running";
             timer = new Timer(CheatLoop, null, 0, FPS);
-            Console.WriteLine("Press m to menu or q to exit");
-            ConsoleKey k;
-            while (true)
-            {
-                k = Console.ReadKey().Key;
 
-                if (k == ConsoleKey.M)
+            string option = String.Empty;
+            while (option != "q")
+            {
+                Console.Clear();
+                Console.WriteLine("Enter m to menu or q to exit");
+
+                if (option == "m")
                 {
                     ShowMenu();
-                    Console.Clear();
-                    Console.WriteLine("Press m to menu or q to exit");
                 }
 
-                if (k == ConsoleKey.Q)
-                {
-                    break;
-                }
+                option = Console.ReadLine().ToLower();
             }
         }
 
@@ -75,7 +71,7 @@ namespace GarouToremo
         private void ShowMenu()
         {
             Console.Clear();
-            Console.WriteLine("Press:");
+            Console.WriteLine("Enter:");
             Console.WriteLine("1 - Toggle Show Inputs [{0}]", overlay.ShowInputHistory);
             Console.WriteLine("Any other key - Quit menu");
             string option = Console.ReadLine();
