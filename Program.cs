@@ -55,16 +55,16 @@ namespace GarouToremo
 
         private void CheatLoop(Object o)
         {
-            cheats.SetHp(Cheats.Player.P1, Cheats.MAX_HP);
-            cheats.SetHp(Cheats.Player.P2, Cheats.MAX_HP);
-            cheats.SetPower(Cheats.Player.P1, Cheats.MAX_POWER);
-            cheats.SetPower(Cheats.Player.P2, Cheats.MAX_POWER);
+            cheats.SetHp(Player.P1, Cheats.MAX_HP);
+            cheats.SetHp(Player.P2, Cheats.MAX_HP);
+            cheats.SetPower(Player.P1, Cheats.MAX_POWER);
+            cheats.SetPower(Player.P2, Cheats.MAX_POWER);
             cheats.SetTime(Cheats.MAX_TIME);
 
-            byte currentP1Input = cheats.GetCurrentInputByte(Cheats.Player.P1);
+            byte currentP1Input = cheats.GetCurrentInputByte(Player.P1);
             overlay.AddP1Input(currentP1Input);
 
-            byte currentP2Input = cheats.GetCurrentInputByte(Cheats.Player.P2);
+            byte currentP2Input = cheats.GetCurrentInputByte(Player.P2);
             overlay.AddP2Input(currentP2Input);
 
             if(hotkeyHandler != null)
@@ -82,11 +82,11 @@ namespace GarouToremo
         private void BackToCenter()
         {
             cheats.SetScenarioPosition(Cheats.POSITION_X_CENTER_SCENARIO);
-            cheats.SetPlayerPosition(Cheats.Player.P1, Cheats.POSITION_X_CENTER_P1, Cheats.POSITION_Y_CENTER_P1);
-            cheats.SetPlayerPosition(Cheats.Player.P2, Cheats.POSITION_X_CENTER_P2, Cheats.POSITION_Y_CENTER_P2);
+            cheats.SetPlayerPosition(Player.P1, Cheats.POSITION_X_CENTER_P1, Cheats.POSITION_Y_CENTER_P1);
+            cheats.SetPlayerPosition(Player.P2, Cheats.POSITION_X_CENTER_P2, Cheats.POSITION_Y_CENTER_P2);
             Thread.Sleep(50);
-            cheats.SetPlayerPosition(Cheats.Player.P1, Cheats.POSITION_X_CENTER_P1, Cheats.POSITION_Y_CENTER_P1);
-            cheats.SetPlayerPosition(Cheats.Player.P2, Cheats.POSITION_X_CENTER_P2, Cheats.POSITION_Y_CENTER_P2);
+            cheats.SetPlayerPosition(Player.P1, Cheats.POSITION_X_CENTER_P1, Cheats.POSITION_Y_CENTER_P1);
+            cheats.SetPlayerPosition(Player.P2, Cheats.POSITION_X_CENTER_P2, Cheats.POSITION_Y_CENTER_P2);
         }
 
         private void ShowMenu()

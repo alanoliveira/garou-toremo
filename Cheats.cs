@@ -38,12 +38,6 @@ namespace GarouToremo
         public const int MAX_HP = 120;
         public const int MAX_POWER = 128;
 
-        public enum Player
-        {
-            P1 = 1,
-            P2 = 2
-        }
-
         private Mem garouMem;
 
         public Cheats(Mem garouMem)
