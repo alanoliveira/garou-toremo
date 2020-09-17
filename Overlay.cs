@@ -98,8 +98,8 @@ namespace GarouToremo
             DrawInfoText(gfx);
             if(ShowInputHistory)
             {
-                DrawInputHistory(gfx, p1InputHistory, AnchorPoint.LEFT);
-                DrawInputHistory(gfx, p2InputHistory, AnchorPoint.RIGHT);
+                DrawInputHistory(gfx, p1InputHistory.ToArray(), AnchorPoint.LEFT);
+                DrawInputHistory(gfx, p2InputHistory.ToArray(), AnchorPoint.RIGHT);
             }
         }
 
@@ -111,10 +111,10 @@ namespace GarouToremo
             }
         }
 
-        private void DrawInputHistory(Graphics gfx, FixedSizedQueue<byte> inputHistory, AnchorPoint anchorPoint)
+        private void DrawInputHistory(Graphics gfx, byte[] inputHistory, AnchorPoint anchorPoint)
         {
             int yMultiplier = 0;
-            for (int i = inputHistory.Count - 1; i >= 0; i--)
+            for (int i = inputHistory.Length - 1; i >= 0; i--)
             {
                 byte input = inputHistory.ElementAt(i);
                 byte previousInput = i > 0 ? inputHistory.ElementAt(i-1) : Cheats.INPUT_NEUTRAL;
