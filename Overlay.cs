@@ -10,6 +10,12 @@ namespace GarouToremo
 {
     class Overlay : IDisposable
     {
+        private enum AnchorPoint
+        {
+            LEFT  = 1,
+            RIGHT = 2,
+        }
+
         [DllImport("user32.dll", SetLastError = true)]
         static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
 
@@ -92,8 +98,8 @@ namespace GarouToremo
             DrawInfoText(gfx);
             if(ShowInputHistory)
             {
-                DrawP1InputHistory(gfx);
-                DrawP2InputHistory(gfx);
+                DrawInputHistory(gfx, p1InputHistory, AnchorPoint.LEFT);
+                DrawInputHistory(gfx, p2InputHistory, AnchorPoint.RIGHT);
             }
         }
 
@@ -105,9 +111,9 @@ namespace GarouToremo
             }
         }
 
-        private void DrawP1InputHistory(Graphics gfx)
+        private void DrawInputHistory(Graphics gfx, FixedSizedQueue<byte> inputHistory, AnchorPoint anchorPoint)
         {
-            byte[] history = p1InputHistory.Reverse().ToArray();
+            byte[] history = inputHistory.Reverse().ToArray();
             int i = 0;
             foreach(byte input in history)
             {
@@ -115,79 +121,70 @@ namespace GarouToremo
                 {
                     continue;
                 }
-                string inputString = InputToString(input);
-                int x = 30;
-                int y = (this.window.Height - 50) - (i * 30);
-                DrawInputHistoryInput(gfx, inputString, x, y);
-                i++;
-            }
-        }
-
-        private void DrawP2InputHistory(Graphics gfx)
-        {
-            byte[] history = p2InputHistory.Reverse().ToArray();
-            int i = 0;
-            foreach (byte input in history)
-            {
-                if (input == Cheats.INPUT_NEUTRAL)
+                int x = 20;
+                int y = (this.window.Height - 50) - (i * 30) + 5;
+                InputString inputString = InputToString(input);
+                if (y > 15)
                 {
-                    continue;
-                }
-                string inputString = InputToString(input);
-                Point measure = gfx.MeasureString(this.fonts["arial"], inputString);
-                int x = window.Width - 30 - (int)measure.X;
-                int y = (this.window.Height - 50) - (i * 30);
+                    if (anchorPoint == AnchorPoint.LEFT)
+                    {
+                        Point directionalStringSize = gfx.MeasureString(this.fonts["arial"], 20, inputString.DirectionalInput);
+                        DrawShadedText(gfx, this.fonts["arial"], 20, this.brushes["magenta"], this.brushes["black"], 1, x + 2, y + 2, anchorPoint, inputString.DirectionalInput);
+                        DrawShadedText(gfx, this.fonts["arial"], 14, this.brushes["magenta"], this.brushes["black"], 1, x + 2 + directionalStringSize.X, y + 10, anchorPoint, String.Join(' ', inputString.ButtonInputs));
+                    }
+                    else 
+                    {
+                        string buttonsString = String.Join(' ', inputString.ButtonInputs);
+                        Point buttonsStringSize = gfx.MeasureString(this.fonts["arial"], 14, buttonsString);
+                        DrawShadedText(gfx, this.fonts["arial"], 20, this.brushes["magenta"], this.brushes["black"], 1, x + 2 + buttonsStringSize.X, y + 2, anchorPoint, inputString.DirectionalInput);
+                        DrawShadedText(gfx, this.fonts["arial"], 14, this.brushes["magenta"], this.brushes["black"], 1, x + 2, y + 10, anchorPoint, buttonsString);
+                    }
 
-                DrawInputHistoryInput(gfx, inputString, x, y);
+                }
                 i++;
             }
         }
 
-        private void DrawInputHistoryInput(Graphics gfx, string text, int x, int y)
+        private InputString InputToString(int input)
         {
-            gfx.DrawText(this.fonts["arial"], this.brushes["magenta"], x+2, y+2, text);
-        }
-
-        private string InputToString(int input)
-        {
-            List<string> inputStrings = new List<string> { };
+            InputString inputString = new InputString();
 
             int directionalInput = input | 0xF0;
             switch (directionalInput)
             {
                 case Cheats.INPUT_UP & Cheats.INPUT_LEFT:
-                    inputStrings.Add("⇖");
+                    inputString.DirectionalInput = "⇖";
                     break;
                 case Cheats.INPUT_UP & Cheats.INPUT_RIGHT:
-                    inputStrings.Add("⇗");
+                    inputString.DirectionalInput = "⇗";
                     break;
                 case Cheats.INPUT_DOWN & Cheats.INPUT_LEFT:
-                    inputStrings.Add("⇙");
+                    inputString.DirectionalInput = "⇙";
                     break;
                 case Cheats.INPUT_DOWN & Cheats.INPUT_RIGHT:
-                    inputStrings.Add("⇘");
+                    inputString.DirectionalInput = "⇘";
                     break;
                 case Cheats.INPUT_UP:
-                    inputStrings.Add("⇑");
+                    inputString.DirectionalInput = "⇑";
                     break;
                 case Cheats.INPUT_DOWN:
-                    inputStrings.Add("⇓");
+                    inputString.DirectionalInput = "⇓";
                     break;
                 case Cheats.INPUT_LEFT:
-                    inputStrings.Add("⇐");
+                    inputString.DirectionalInput = "⇐";
                     break;
                 case Cheats.INPUT_RIGHT:
-                    inputStrings.Add("⇒");
+                    inputString.DirectionalInput = "⇒";
                     break;
             }
 
             int buttonlInput = input | 0x0F;
-            if ((buttonlInput | Cheats.INPUT_HP) == Cheats.INPUT_HP) inputStrings.Add("C");
-            if ((buttonlInput | Cheats.INPUT_HK) == Cheats.INPUT_HK) inputStrings.Add("D");
-            if ((buttonlInput | Cheats.INPUT_LP) == Cheats.INPUT_LP) inputStrings.Add("A");
-            if ((buttonlInput | Cheats.INPUT_LK) == Cheats.INPUT_LK) inputStrings.Add("B");
+            if ((buttonlInput | Cheats.INPUT_HP) == Cheats.INPUT_HP) inputString.ButtonInputs.Add("C");
+            if ((buttonlInput | Cheats.INPUT_HK) == Cheats.INPUT_HK) inputString.ButtonInputs.Add("D");
+            if ((buttonlInput | Cheats.INPUT_LP) == Cheats.INPUT_LP) inputString.ButtonInputs.Add("A");
+            if ((buttonlInput | Cheats.INPUT_LK) == Cheats.INPUT_LK) inputString.ButtonInputs.Add("B");
 
-            return String.Join(' ', inputStrings);
+            return inputString;
         }
 
         public void AddP1Input(byte input)
@@ -237,5 +234,38 @@ namespace GarouToremo
             GC.SuppressFinalize(this);
         }
         #endregion
+
+        private class InputString
+        {
+            public string DirectionalInput;
+            public List<string> ButtonInputs;
+
+            public InputString()
+            {
+                DirectionalInput = "";
+                ButtonInputs = new List<string>();
+            }
+
+            public InputString(string directionalInput, List<string> buttonInputs)
+            {
+                DirectionalInput = directionalInput;
+                ButtonInputs = buttonInputs;
+            }
+        }
+
+        private void DrawShadedText(Graphics gfx, Font font, float fontSize, IBrush brush, IBrush shade, float shadeSize, float x, float y, AnchorPoint anchor, string text)
+        {
+            if (anchor == AnchorPoint.RIGHT)
+            {
+                Point directionalStringSize = gfx.MeasureString(font, fontSize, text);
+                x = gfx.Width - x - directionalStringSize.X;
+            }
+            gfx.DrawText(font, fontSize, shade, x + shadeSize, y, text);
+            gfx.DrawText(font, fontSize, shade, x - shadeSize, y, text);
+            gfx.DrawText(font, fontSize, shade, x, y + shadeSize, text);
+            gfx.DrawText(font, fontSize, shade, x, y - shadeSize, text);
+            gfx.DrawText(font, fontSize, brush, x, y, text);
+
+        }
     }
 }
