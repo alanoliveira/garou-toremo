@@ -13,6 +13,7 @@ namespace GarouToremo
         Cheats cheats;
         Timer timer;
         Overlay overlay;
+        IHotkeyListenable hotkeyHandler;
 
         static void Main(string[] args)
         {
@@ -66,6 +67,17 @@ namespace GarouToremo
 
             byte currentP2Input = cheats.GetCurrentInputByte(Cheats.Player.P2);
             overlay.AddP2Input(currentP2Input);
+
+            if(hotkeyHandler != null)
+            {
+                hotkeyHandler.Update();
+
+                if(hotkeyHandler.ResetPositionCenterPressed())
+                {
+                    BackToCenter();
+                    overlay.InfoText = "Position reseted to center";
+                }
+            }
         }
 
         private void BackToCenter()
@@ -80,6 +92,7 @@ namespace GarouToremo
             Console.Clear();
             Console.WriteLine("Enter:");
             Console.WriteLine("1 - Toggle Show Inputs [{0}]", overlay.ShowInputHistory);
+            Console.WriteLine("2 - Set hotkeys");
             Console.WriteLine("Any other key - Quit menu");
             string option = Console.ReadLine();
 
@@ -88,7 +101,45 @@ namespace GarouToremo
                 case "1":
                     overlay.ShowInputHistory = !overlay.ShowInputHistory;
                     break;
+                case "2":
+                    SetHotkeys();
+                    break;
             }
+        }
+
+        private void SetHotkeys()
+        {
+            IHotkeyListenable newHotkeyHandler = ChooseHotkeyHandler();
+            if(newHotkeyHandler != null)
+            {
+                if(hotkeyHandler != null)
+                {
+                    hotkeyHandler.Dispose();
+                }
+                hotkeyHandler = newHotkeyHandler;
+                ConfigureHotkeyHandler();
+            }
+        }
+
+        private IHotkeyListenable ChooseHotkeyHandler()
+        {
+            Console.Clear();
+            Console.WriteLine("1 - Keyboard");
+            string option = Console.ReadLine();
+
+            switch (option)
+            {
+                case "1":
+                    return new KeyboardHotkey();
+            }
+
+            return null;
+        }
+
+        private void ConfigureHotkeyHandler()
+        {
+            Console.WriteLine("Set reset position Hotkey");
+            hotkeyHandler.SetRestPositionHotkey();
         }
     }
 }
