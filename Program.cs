@@ -44,13 +44,12 @@ namespace GarouToremo
             {
                 Console.Clear();
                 Console.WriteLine("Enter m to menu or q to exit");
+                option = Console.ReadLine().ToLower();
 
                 if (option == "m")
                 {
                     ShowMenu();
                 }
-
-                option = Console.ReadLine().ToLower();
             }
         }
 
@@ -83,6 +82,9 @@ namespace GarouToremo
         private void BackToCenter()
         {
             cheats.SetScenarioPosition(Cheats.POSITION_X_CENTER_SCENARIO);
+            cheats.SetPlayerPosition(Cheats.Player.P1, Cheats.POSITION_X_CENTER_P1, Cheats.POSITION_Y_CENTER_P1);
+            cheats.SetPlayerPosition(Cheats.Player.P2, Cheats.POSITION_X_CENTER_P2, Cheats.POSITION_Y_CENTER_P2);
+            Thread.Sleep(50);
             cheats.SetPlayerPosition(Cheats.Player.P1, Cheats.POSITION_X_CENTER_P1, Cheats.POSITION_Y_CENTER_P1);
             cheats.SetPlayerPosition(Cheats.Player.P2, Cheats.POSITION_X_CENTER_P2, Cheats.POSITION_Y_CENTER_P2);
         }
