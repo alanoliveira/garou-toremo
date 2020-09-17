@@ -113,17 +113,23 @@ namespace GarouToremo
 
         private void DrawInputHistory(Graphics gfx, FixedSizedQueue<byte> inputHistory, AnchorPoint anchorPoint)
         {
-            byte[] history = inputHistory.Reverse().ToArray();
-            int i = 0;
-            foreach(byte input in history)
+            int yMultiplier = 0;
+            for (int i = inputHistory.Count - 1; i >= 0; i--)
             {
-                if (input == Cheats.INPUT_NEUTRAL)
+                byte input = inputHistory.ElementAt(i);
+                byte previousInput = i > 0 ? inputHistory.ElementAt(i-1) : Cheats.INPUT_NEUTRAL;
+                int buttonlInput = input | 0x0F;
+                int directionalInput = input | 0xF0;
+                var effectiveButtonInput = (byte)~(previousInput ^ (buttonlInput & previousInput));
+                byte effectiveInput = (byte)(effectiveButtonInput & directionalInput);
+
+                if (effectiveInput == Cheats.INPUT_NEUTRAL)
                 {
                     continue;
                 }
                 int x = 20;
-                int y = (this.window.Height - 50) - (i * 30) + 5;
-                InputString inputString = InputToString(input);
+                int y = (this.window.Height - 50) - (yMultiplier * 30) + 5;
+                InputString inputString = InputToString(effectiveInput);
                 if (y > 15)
                 {
                     if (anchorPoint == AnchorPoint.LEFT)
@@ -141,7 +147,8 @@ namespace GarouToremo
                     }
 
                 }
-                i++;
+
+                yMultiplier++;
             }
         }
 
@@ -179,10 +186,10 @@ namespace GarouToremo
             }
 
             int buttonlInput = input | 0x0F;
-            if ((buttonlInput | Cheats.INPUT_HP) == Cheats.INPUT_HP) inputString.ButtonInputs.Add("C");
-            if ((buttonlInput | Cheats.INPUT_HK) == Cheats.INPUT_HK) inputString.ButtonInputs.Add("D");
             if ((buttonlInput | Cheats.INPUT_LP) == Cheats.INPUT_LP) inputString.ButtonInputs.Add("A");
             if ((buttonlInput | Cheats.INPUT_LK) == Cheats.INPUT_LK) inputString.ButtonInputs.Add("B");
+            if ((buttonlInput | Cheats.INPUT_HP) == Cheats.INPUT_HP) inputString.ButtonInputs.Add("C");
+            if ((buttonlInput | Cheats.INPUT_HK) == Cheats.INPUT_HK) inputString.ButtonInputs.Add("D");
 
             return inputString;
         }
