@@ -68,6 +68,13 @@ namespace GarouToremo
             overlay.AddP2Input(currentP2Input);
         }
 
+        private void BackToCenter()
+        {
+            cheats.SetScenarioPosition(Cheats.POSITION_X_CENTER_SCENARIO);
+            cheats.SetPlayerPosition(Cheats.Player.P1, Cheats.POSITION_X_CENTER_P1, Cheats.POSITION_Y_CENTER_P1);
+            cheats.SetPlayerPosition(Cheats.Player.P2, Cheats.POSITION_X_CENTER_P2, Cheats.POSITION_Y_CENTER_P2);
+        }
+
         private void ShowMenu()
         {
             Console.Clear();

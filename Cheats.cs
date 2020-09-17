@@ -1,20 +1,22 @@
 ﻿using Memory;
+using System;
 
 namespace GarouToremo
 {
     class Cheats
     {
-        private const string ADDRESS_P1_INPUT = "Garou.exe+285FD8";
-        private const string ADDRESS_P1_HP    = "Garou.exe+2B648F";
-        private const string ADDRESS_P1_POWER = "Garou.exe+2B64BF";
-        private const string ADDRESS_P1_X     = "Garou.exe+2B6420"; // 2 bytes
-        private const string ADDRESS_P1_Y     = "Garou.exe+2B6428"; // 2 bytes
-        private const string ADDRESS_P2_INPUT = "Garou.exe+285FDC";
-        private const string ADDRESS_P2_HP    = "Garou.exe+2B658F";
-        private const string ADDRESS_P2_POWER = "Garou.exe+2B65BF";
-        private const string ADDRESS_P2_X     = "Garou.exe+2B6520"; // 2 bytes
-        private const string ADDRESS_P2_Y     = "Garou.exe+2B6528"; // 2 bytes
-        private const string ADDRESS_TIMER    = "Garou.exe+2BD491";
+        private const string ADDRESS_P1_INPUT      = "Garou.exe+285FD8";
+        private const string ADDRESS_P1_HP         = "Garou.exe+2B648F";
+        private const string ADDRESS_P1_POWER      = "Garou.exe+2B64BF";
+        private const string ADDRESS_P1_X          = "Garou.exe+2B6420"; // 2 bytes
+        private const string ADDRESS_P1_Y          = "Garou.exe+2B6428"; // 2 bytes
+        private const string ADDRESS_P2_INPUT      = "Garou.exe+285FDC";
+        private const string ADDRESS_P2_HP         = "Garou.exe+2B658F";
+        private const string ADDRESS_P2_POWER      = "Garou.exe+2B65BF";
+        private const string ADDRESS_P2_X          = "Garou.exe+2B6520"; // 2 bytes
+        private const string ADDRESS_P2_Y          = "Garou.exe+2B6528"; // 2 bytes
+        private const string ADDRESS_TIMER         = "Garou.exe+2BD491";
+        private const string ADDRESS_SCENARIO_X    = "Garou.exe+2B6E20";
 
         public const byte INPUT_UP      = 0xFE;
         public const byte INPUT_DOWN    = 0xFD;
@@ -25,6 +27,12 @@ namespace GarouToremo
         public const byte INPUT_HP      = 0xBF;
         public const byte INPUT_HK      = 0x7F;
         public const byte INPUT_NEUTRAL = 0xFF;
+
+        public const int POSITION_X_CENTER_P1       = 240;
+        public const int POSITION_Y_CENTER_P1       = 0;
+        public const int POSITION_X_CENTER_P2       = 400;
+        public const int POSITION_Y_CENTER_P2       = 0;
+        public const int POSITION_X_CENTER_SCENARIO = 160;
 
         public const int MAX_TIME = 0x99;
         public const int MAX_HP = 120;
@@ -122,6 +130,25 @@ namespace GarouToremo
             int y = garouMem.Read2Byte(addrY);
 
             return new int[] { x, y };
+        }
+
+        public void SetPlayerPosition(Player player, int x, int y)
+        {
+            string addrX = ADDRESS_P1_X;
+            string addrY = ADDRESS_P1_Y;
+            if (player == Player.P2)
+            {
+                addrX = ADDRESS_P2_X;
+                addrY = ADDRESS_P2_Y;
+            }
+
+            garouMem.WriteBytes(addrX, BitConverter.GetBytes((short)x));
+            garouMem.WriteBytes(addrY, BitConverter.GetBytes((short)y));
+        }
+
+        public void SetScenarioPosition(int x)
+        {
+            garouMem.WriteBytes(ADDRESS_SCENARIO_X, BitConverter.GetBytes((short)x));
         }
     }
 }
