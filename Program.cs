@@ -1,4 +1,5 @@
 ﻿using Memory;
+using SharpDX.DirectInput;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -173,13 +174,22 @@ namespace GarouToremo
         private IHotkeyListenable ChooseHotkeyHandler()
         {
             Console.Clear();
+
             Console.WriteLine("1 - Keyboard");
+            for(int i = 0; i < ControllerHotkey.DeviceCount(); i++)
+            {
+                Console.WriteLine("{0} - Joystick {1}", i+2, i);
+            }
             string option = Console.ReadLine();
 
-            switch (option)
+            int intOption = int.Parse(option);
+            if (intOption == 1)
             {
-                case "1":
-                    return new KeyboardHotkey();
+                return new KeyboardHotkey();
+            } 
+            else
+            {
+                return new ControllerHotkey(intOption-2);
             }
 
             return null;
