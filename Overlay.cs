@@ -23,7 +23,6 @@ namespace GarouToremo
         const int FPS = 60;
         const int INFO_TEXT_TIME = 5 * FPS;
         const int DEFAULT_FONT_SIZE = 20;
-        const int INPUT_QUEUE_SIZE = 50;
 
         private readonly StickyWindow window;
 
@@ -42,10 +41,9 @@ namespace GarouToremo
             }
         }
 
+        public byte[] effectiveInputsP1 = new byte[] { };
+        public byte[] effectiveInputsP2 = new byte[] { };
         public bool ShowInputHistory = true;
-        private FixedSizedQueue<byte> p1InputHistory;
-        private FixedSizedQueue<byte> p2InputHistory;
-
 
         public Overlay()
         {
@@ -53,9 +51,6 @@ namespace GarouToremo
             if (this.garouWindow == IntPtr.Zero) {
                 throw new Exception("Garou window not found");
             }
-
-            this.p1InputHistory = new FixedSizedQueue<byte>(INPUT_QUEUE_SIZE);
-            this.p2InputHistory = new FixedSizedQueue<byte>(INPUT_QUEUE_SIZE);
 
             this.brushes = new Dictionary<string, SolidBrush>();
             this.fonts = new Dictionary<string, Font>();
@@ -98,8 +93,8 @@ namespace GarouToremo
             DrawInfoText(gfx);
             if(ShowInputHistory)
             {
-                DrawInputHistory(gfx, p1InputHistory.ToArray(), AnchorPoint.LEFT);
-                DrawInputHistory(gfx, p2InputHistory.ToArray(), AnchorPoint.RIGHT);
+                DrawInputHistory(gfx, effectiveInputsP1, AnchorPoint.LEFT);
+                DrawInputHistory(gfx, effectiveInputsP2, AnchorPoint.RIGHT);
             }
         }
 
@@ -117,19 +112,10 @@ namespace GarouToremo
             for (int i = inputHistory.Length - 1; i >= 0; i--)
             {
                 byte input = inputHistory.ElementAt(i);
-                byte previousInput = i > 0 ? inputHistory.ElementAt(i-1) : Cheats.INPUT_NEUTRAL;
-                int buttonlInput = input | 0x0F;
-                int directionalInput = input | 0xF0;
-                var effectiveButtonInput = (byte)~(previousInput ^ (buttonlInput & previousInput));
-                byte effectiveInput = (byte)(effectiveButtonInput & directionalInput);
 
-                if (effectiveInput == Cheats.INPUT_NEUTRAL)
-                {
-                    continue;
-                }
                 int x = 20;
                 int y = (this.window.Height - 50) - (yMultiplier * 30) + 5;
-                InputString inputString = InputToString(effectiveInput);
+                InputString inputString = InputToString(input);
                 if (y > 15)
                 {
                     if (anchorPoint == AnchorPoint.LEFT)
@@ -192,18 +178,6 @@ namespace GarouToremo
             if ((buttonlInput | Cheats.INPUT_HK) == Cheats.INPUT_HK) inputString.ButtonInputs.Add("D");
 
             return inputString;
-        }
-
-        public void AddP1Input(byte input)
-        {
-            if (p1InputHistory.Count == 0 || p1InputHistory.Last != input)
-                p1InputHistory.Enqueue(input);
-        }
-                         
-        public void AddP2Input(byte input)
-        {
-            if (p2InputHistory.Count == 0 || p2InputHistory.Last != input)
-                p2InputHistory.Enqueue(input);
         }
 
         private void DestroyWindowGraphics(object sender, DestroyGraphicsEventArgs e)

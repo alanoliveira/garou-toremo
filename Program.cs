@@ -8,12 +8,13 @@ namespace GarouToremo
 {
     class Program
     {
-        const int FPS = 60;
+        const int FPS = 120;
 
         Cheats cheats;
-        Timer timer;
         Overlay overlay;
         IHotkeyListenable hotkeyHandler;
+        InputHistory p1InputHistory;
+        InputHistory p2InputHistory;
 
         static void Main(string[] args)
         {
@@ -29,6 +30,8 @@ namespace GarouToremo
                 Environment.Exit(1);
             }
 
+            p1InputHistory = new InputHistory();
+            p2InputHistory = new InputHistory();
             cheats = new Cheats(mem);
             overlay = new Overlay();
         }
@@ -37,7 +40,7 @@ namespace GarouToremo
         {
             overlay.Run();
             this.overlay.InfoText = "GarouToremo is running";
-            timer = new Timer(CheatLoop, null, 0, FPS);
+            new Timer(CheatLoop, null, 0, FPS);
 
             string option = String.Empty;
             while (option != "q")
@@ -62,12 +65,15 @@ namespace GarouToremo
             cheats.SetTime(Cheats.MAX_TIME);
 
             byte currentP1Input = cheats.GetCurrentInputByte(Player.P1);
-            overlay.AddP1Input(currentP1Input);
+            p1InputHistory.AddInput(currentP1Input);
+            overlay.effectiveInputsP1 = p1InputHistory.GetEffectiveInputs();
 
             byte currentP2Input = cheats.GetCurrentInputByte(Player.P2);
-            overlay.AddP2Input(currentP2Input);
+            p2InputHistory.AddInput(currentP2Input);
+            overlay.effectiveInputsP2 = p2InputHistory.GetEffectiveInputs();
 
-            if(hotkeyHandler != null)
+
+            if (hotkeyHandler != null)
             {
                 hotkeyHandler.Update();
 
