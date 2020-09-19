@@ -10,6 +10,8 @@ namespace GarouToremo
         private Joystick joystick;
         private JoystickOffset ResetPositionHotkey;
         private JoystickOffset SaveCustomPositionHotkey;
+        private JoystickOffset ToggleRecordHotkey;
+        private JoystickOffset TogglePlaybackHotkey;
         private List<JoystickOffset> presseKeys = new List<JoystickOffset>();
 
         private bool leftPressed;
@@ -89,6 +91,16 @@ namespace GarouToremo
             SaveCustomPositionHotkey = GetPressedKey();
         }
 
+        public void SetToggleRecordHotkey()
+        {
+            ToggleRecordHotkey = GetPressedKey();
+        }
+
+        public void SetTogglePlaybackHotkey()
+        {
+            TogglePlaybackHotkey = GetPressedKey();
+        }
+
         public bool ResetPositionCenterPressed()
         {
             return presseKeys.Contains(ResetPositionHotkey) && !leftPressed && !rightPressed && downPressed;
@@ -112,6 +124,16 @@ namespace GarouToremo
         public bool SaveCustomPositionPressed()
         {
             return presseKeys.Contains(SaveCustomPositionHotkey);
+        }
+
+        public bool ToggleRecordPressed()
+        {
+            return presseKeys.Contains(ToggleRecordHotkey);
+        }
+
+        public bool TogglePlaybackPressed()
+        {
+            return presseKeys.Contains(TogglePlaybackHotkey);
         }
 
         private JoystickOffset GetPressedKey()

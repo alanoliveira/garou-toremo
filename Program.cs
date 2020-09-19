@@ -12,14 +12,25 @@ namespace GarouToremo
         const int FPS = 120;
 
         Cheats cheats;
+        InputHandler inputHandler;
         Overlay overlay;
         IHotkeyListenable hotkeyHandler;
         InputHistory p1InputHistory;
         InputHistory p2InputHistory;
-
+        private State state = State.IDLE;
+        private Dictionary<int, byte[]> recordedInputSlots = new Dictionary<int, byte[]>();
+        private int currentSlot = 0;
         int customP1X = Cheats.POSITION_X_CENTER_P1;
         int customP2X = Cheats.POSITION_X_CENTER_P2;
         int customScenarioX = Cheats.POSITION_X_CENTER_SCENARIO;
+
+        private enum State
+        {
+            IDLE = 1,
+            PREPARING_REC = 2,
+            RECORDING = 3,
+            PLAYBACKING = 4
+        }
 
         static void Main(string[] args)
         {
@@ -28,7 +39,7 @@ namespace GarouToremo
 
         public Program()
         {
-            Mem mem = new Mem();
+            MemoryHandler mem = new MemoryHandler();
 
             if (!mem.OpenProcess("Garou")) {
                 Console.WriteLine("Error to open Garou proccess. Is the game running?");
@@ -38,6 +49,7 @@ namespace GarouToremo
             p1InputHistory = new InputHistory();
             p2InputHistory = new InputHistory();
             cheats = new Cheats(mem);
+            inputHandler = new InputHandler(mem);
             overlay = new Overlay();
         }
 
@@ -71,11 +83,11 @@ namespace GarouToremo
                 cheats.SetPower(Player.P2, Cheats.MAX_POWER);
                 cheats.SetTime(Cheats.MAX_TIME);
 
-                byte currentP1Input = cheats.GetCurrentInputByte(Player.P1);
+                byte currentP1Input = inputHandler.GetCurrentInputByte(Player.P1);
                 p1InputHistory.AddInput(currentP1Input);
                 overlay.effectiveInputsP1 = p1InputHistory.GetEffectiveInputs();
 
-                byte currentP2Input = cheats.GetCurrentInputByte(Player.P2);
+                byte currentP2Input = inputHandler.GetCurrentInputByte(Player.P2);
                 p2InputHistory.AddInput(currentP2Input);
                 overlay.effectiveInputsP2 = p2InputHistory.GetEffectiveInputs();
 
@@ -115,13 +127,62 @@ namespace GarouToremo
                         customP2X = cheats.GetPosition(Player.P2)[0];
                         customScenarioX = cheats.GetScenarioPosition(Player.P2)[0];
                     }
+
+                    if (hotkeyHandler.ToggleRecordPressed())
+                    {
+                        if (state == State.IDLE)
+                        {
+                            state = State.PREPARING_REC;
+                            inputHandler.InvertControls();
+                            overlay.InfoText = "Controls inverted";
+                        }
+                        else if (state == State.PREPARING_REC)
+                        {
+                            state = State.RECORDING;
+                            inputHandler.StartRecordInput();
+                            overlay.InfoText = String.Format("Record started on slot #{0}", currentSlot);
+                        }
+                        else if (state == State.RECORDING)
+                        {
+                            state = State.IDLE;
+                            inputHandler.StopRecordInput();
+                            recordedInputSlots[currentSlot] = inputHandler.GetRecordedInput();
+                            inputHandler.InvertControls();
+                            overlay.InfoText = String.Format("Input saved on slot #{0}", currentSlot);
+                        }
+                        Thread.Sleep(300);
+                    }
+
+                    if (hotkeyHandler.TogglePlaybackPressed())
+                    {
+                        if (state == State.IDLE)
+                        {
+                            if (!recordedInputSlots.ContainsKey(currentSlot))
+                            {
+                                overlay.InfoText = String.Format("There is no input on slot #{0}", currentSlot);
+                            }
+                            else
+                            {
+                                state = State.PLAYBACKING;
+                                inputHandler.StartPlaybackInput(recordedInputSlots[currentSlot]);
+                                overlay.InfoText = String.Format("Playbacking started on slot #{0}", currentSlot);
+                            }
+                        }
+                        else if (state == State.PLAYBACKING)
+                        {
+                            state = State.IDLE;
+                            inputHandler.StopPlaybackInput();
+                            overlay.InfoText = "Playback Stoped";
+                        }
+                        Thread.Sleep(300);
+                    }
                 }
             }
         }
 
         private void SetPlayersXPoistion(int p1X, int p2X, int scenarionX)
         {
-            byte[][] originalAddresses = cheats.DisableControls();
+            byte[][] originalAddresses = inputHandler.DisableControls();
             cheats.SetScenarioPosition(scenarionX);
             cheats.SetPlayerPosition(Player.P1, p1X, Cheats.POSITION_Y_CENTER_P1);
             cheats.SetPlayerPosition(Player.P2, p2X, Cheats.POSITION_Y_CENTER_P2);
@@ -134,7 +195,7 @@ namespace GarouToremo
             cheats.SetPlayerPosition(Player.P1, p1X, Cheats.POSITION_Y_CENTER_P1);
             cheats.SetPlayerPosition(Player.P2, p2X, Cheats.POSITION_Y_CENTER_P2);
             Thread.Sleep(400);
-            cheats.ReenableControls(originalAddresses[0], originalAddresses[1]);
+            inputHandler.ReenableControls(originalAddresses[0], originalAddresses[1]);
         }
 
         private void ShowMenu()
@@ -201,6 +262,10 @@ namespace GarouToremo
             hotkeyHandler.SetRestPositionHotkey();
             Console.WriteLine("Set save custom position Hotkey");
             hotkeyHandler.SetSaveCustomPositionHotkey();
+            Console.WriteLine("Set record input Hotkey");
+            hotkeyHandler.SetToggleRecordHotkey();
+            Console.WriteLine("Set playback input Hotkey");
+            hotkeyHandler.SetTogglePlaybackHotkey();
         }
     }
 }

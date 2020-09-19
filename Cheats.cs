@@ -5,18 +5,14 @@ namespace GarouToremo
 {
     class Cheats
     {
-        private const string ADDRESS_P1_INPUT        = "Garou.exe+285FD8";
         private const string ADDRESS_P1_HP           = "Garou.exe+2B648F";
         private const string ADDRESS_P1_POWER        = "Garou.exe+2B64BF";
         private const string ADDRESS_P1_X            = "Garou.exe+2B6420"; // 2 bytes
         private const string ADDRESS_P1_Y            = "Garou.exe+2B6428"; // 2 bytes
-        protected const string ADDRESS_P1_INPUT_READ = "Garou.exe+6B9E4"; // mov[Garou.exe+285FD8],ecx -> 89 0D D8 5F 68 00
-        private const string ADDRESS_P2_INPUT        = "Garou.exe+285FDC";
         private const string ADDRESS_P2_HP           = "Garou.exe+2B658F";
         private const string ADDRESS_P2_POWER        = "Garou.exe+2B65BF";
         private const string ADDRESS_P2_X            = "Garou.exe+2B6520"; // 2 bytes
         private const string ADDRESS_P2_Y            = "Garou.exe+2B6528"; // 2 bytes
-        protected const string ADDRESS_P2_INPUT_READ = "Garou.exe+6BA42"; // mov [Garou.exe+285FDC],ecx -> 89 0D DC 5F 68 00
         private const string ADDRESS_TIMER           = "Garou.exe+2BD491";
         private const string ADDRESS_SCENARIO_X      = "Garou.exe+2B6E20";
 
@@ -103,37 +99,6 @@ namespace GarouToremo
             }
 
             garouMem.WriteBytes(addr, new byte[] { (byte)amount });
-        }
-
-        public byte GetCurrentInputByte(Player player)
-        {
-            string addr = ADDRESS_P1_INPUT;
-            if (player == Player.P2)
-            {
-                addr = ADDRESS_P2_INPUT;
-            }
-
-            return (byte)garouMem.ReadByte(addr);
-        }
-
-        public byte[][] DisableControls()
-        {
-            byte[] p1 = this.garouMem.ReadBytes(ADDRESS_P1_INPUT_READ, 6);
-            byte[] p2 = this.garouMem.ReadBytes(ADDRESS_P2_INPUT_READ, 6);
-
-            byte[] nops = new byte[] { 0x90, 0x90, 0x90, 0x90, 0x90, 0x90 };
-            this.garouMem.WriteBytes(ADDRESS_P1_INPUT_READ, nops);
-            this.garouMem.WriteBytes(ADDRESS_P2_INPUT_READ, nops);
-            this.garouMem.WriteBytes(ADDRESS_P1_INPUT, new byte[] { 0xFF });
-            this.garouMem.WriteBytes(ADDRESS_P2_INPUT, new byte[] { 0xFF });
-
-            return new byte[][] { p1, p2 };
-        }
-
-        public void ReenableControls(byte[] p1Instruction, byte[] p2Instruction)
-        {
-            this.garouMem.WriteBytes(ADDRESS_P1_INPUT_READ, p1Instruction);
-            this.garouMem.WriteBytes(ADDRESS_P2_INPUT_READ, p2Instruction);
         }
 
         public int[] GetPosition(Player player)

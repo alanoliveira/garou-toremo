@@ -10,6 +10,8 @@ namespace GarouToremo
         private Keyboard keyboard;
         private Key ResetPositionHotkey;
         private Key SaveCustomPositionHotkey;
+        private Key ToggleRecordHotkey;
+        private Key TogglePlaybackHotkey;
         private List<Key> presseKeys = new List<Key>();
 
         public KeyboardHotkey()
@@ -47,6 +49,26 @@ namespace GarouToremo
         public void SetSaveCustomPositionHotkey()
         {
             SaveCustomPositionHotkey = GetPressedKey();
+        }
+
+        public void SetToggleRecordHotkey()
+        {
+            ToggleRecordHotkey = GetPressedKey();
+        }
+
+        public bool ToggleRecordPressed()
+        {
+            return presseKeys.Contains(ToggleRecordHotkey);
+        }
+
+        public void SetTogglePlaybackHotkey()
+        {
+            TogglePlaybackHotkey = GetPressedKey();
+        }
+
+        public bool TogglePlaybackPressed()
+        {
+            return presseKeys.Contains(TogglePlaybackHotkey);
         }
 
         public bool ResetPositionCenterPressed()
