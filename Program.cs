@@ -198,6 +198,7 @@ namespace GarouToremo
                 Console.WriteLine("Enter:");
                 Console.WriteLine("1 - Toggle Show Inputs [{0}]", overlay.ShowInputHistory);
                 Console.WriteLine("2 - Set hotkeys");
+                Console.WriteLine("3 - Set record slot [{0}]", currentSlot);
                 Console.WriteLine("q - Quit");
                 option = Console.ReadLine();
 
@@ -208,6 +209,9 @@ namespace GarouToremo
                         break;
                     case "2":
                         SetHotkeys();
+                        break;
+                    case "3":
+                        SetRecordSlot();
                         break;
                 }
             }
@@ -261,6 +265,16 @@ namespace GarouToremo
             hotkeyHandler.SetToggleRecordHotkey();
             Console.WriteLine("Set playback input Hotkey");
             hotkeyHandler.SetTogglePlaybackHotkey();
+        }
+
+        private void SetRecordSlot()
+        {
+            Console.WriteLine("Choose the slot [0-9]");
+            int option = int.Parse(Console.ReadLine());
+            if(option >= 0 && option <= 9)
+            {
+                currentSlot = option;
+            }
         }
     }
 }
