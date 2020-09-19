@@ -16,6 +16,10 @@ namespace GarouToremo
         InputHistory p1InputHistory;
         InputHistory p2InputHistory;
 
+        int customP1X = Cheats.POSITION_X_CENTER_P1;
+        int customP2X = Cheats.POSITION_X_CENTER_P2;
+        int customScenarioX = Cheats.POSITION_X_CENTER_SCENARIO;
+
         static void Main(string[] args)
         {
             new Program().Run();
@@ -81,21 +85,55 @@ namespace GarouToremo
 
                     if (hotkeyHandler.ResetPositionCenterPressed())
                     {
-                        BackToCenter();
-                        overlay.InfoText = "Position reseted to center";
+                        overlay.InfoText = "Reset position - center";
+                        SetPlayersXPoistion(Cheats.POSITION_X_CENTER_P1, Cheats.POSITION_X_CENTER_P2, Cheats.POSITION_X_CENTER_SCENARIO);
+                    }
+
+                    if (hotkeyHandler.ResetPositionLeftPressed())
+                    {
+                        overlay.InfoText = "Reset position - left";
+                        SetPlayersXPoistion(Cheats.POSITION_X_MIN + 10, Cheats.POSITION_X_MIN + 100, Cheats.POSITION_X_MIN_SCENARIO);
+                    }
+
+                    if (hotkeyHandler.ResetPositionRightPressed())
+                    {
+                        overlay.InfoText = "Reset position - right";
+                        SetPlayersXPoistion(Cheats.POSITION_X_MAX - 10, Cheats.POSITION_X_MAX - 100, Cheats.POSITION_X_MAX_SCENARIO);
+                    }
+
+                    if (hotkeyHandler.ResetPositionCustomPressed())
+                    {
+                        overlay.InfoText = "Reset position - custom";
+                        SetPlayersXPoistion(customP1X, customP2X, customScenarioX);
+                    }
+
+                    if (hotkeyHandler.SaveCustomPositionPressed())
+                    {
+                        overlay.InfoText = "Current position saved";
+                        customP1X = cheats.GetPosition(Player.P1)[0];
+                        customP2X = cheats.GetPosition(Player.P2)[0];
+                        customScenarioX = cheats.GetScenarioPosition(Player.P2)[0];
                     }
                 }
             }
         }
 
-        private void BackToCenter()
+        private void SetPlayersXPoistion(int p1X, int p2X, int scenarionX)
         {
-            cheats.SetScenarioPosition(Cheats.POSITION_X_CENTER_SCENARIO);
-            cheats.SetPlayerPosition(Player.P1, Cheats.POSITION_X_CENTER_P1, Cheats.POSITION_Y_CENTER_P1);
-            cheats.SetPlayerPosition(Player.P2, Cheats.POSITION_X_CENTER_P2, Cheats.POSITION_Y_CENTER_P2);
+            byte[][] originalAddresses = cheats.DisableControls();
+            cheats.SetScenarioPosition(scenarionX);
+            cheats.SetPlayerPosition(Player.P1, p1X, Cheats.POSITION_Y_CENTER_P1);
+            cheats.SetPlayerPosition(Player.P2, p2X, Cheats.POSITION_Y_CENTER_P2);
             Thread.Sleep(50);
-            cheats.SetPlayerPosition(Player.P1, Cheats.POSITION_X_CENTER_P1, Cheats.POSITION_Y_CENTER_P1);
-            cheats.SetPlayerPosition(Player.P2, Cheats.POSITION_X_CENTER_P2, Cheats.POSITION_Y_CENTER_P2);
+            cheats.SetScenarioPosition(scenarionX);
+            cheats.SetPlayerPosition(Player.P1, p1X, Cheats.POSITION_Y_CENTER_P1);
+            cheats.SetPlayerPosition(Player.P2, p2X, Cheats.POSITION_Y_CENTER_P2);
+            Thread.Sleep(50);
+            cheats.SetScenarioPosition(scenarionX);
+            cheats.SetPlayerPosition(Player.P1, p1X, Cheats.POSITION_Y_CENTER_P1);
+            cheats.SetPlayerPosition(Player.P2, p2X, Cheats.POSITION_Y_CENTER_P2);
+            Thread.Sleep(400);
+            cheats.ReenableControls(originalAddresses[0], originalAddresses[1]);
         }
 
         private void ShowMenu()
@@ -151,6 +189,8 @@ namespace GarouToremo
         {
             Console.WriteLine("Set reset position Hotkey");
             hotkeyHandler.SetRestPositionHotkey();
+            Console.WriteLine("Set save custom position Hotkey");
+            hotkeyHandler.SetSaveCustomPositionHotkey();
         }
     }
 }

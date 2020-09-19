@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using SharpDX.DirectInput;
 
 
@@ -8,10 +9,8 @@ namespace GarouToremo
     {
         private Keyboard keyboard;
         private Key ResetPositionHotkey;
-
-        private bool resetPositionKeyPressed;
-        private bool leftArrowKeyPressed;
-        private bool rightArrowKeyPressed;
+        private Key SaveCustomPositionHotkey;
+        private List<Key> presseKeys = new List<Key>();
 
         public KeyboardHotkey()
         {
@@ -29,9 +28,14 @@ namespace GarouToremo
             var datas = keyboard.GetBufferedData();
             foreach (var state in datas)
             {
-                this.resetPositionKeyPressed = state.IsPressed && state.Key == ResetPositionHotkey;
-                this.leftArrowKeyPressed = state.IsPressed && state.Key == Key.Left;
-                this.rightArrowKeyPressed = state.IsPressed && state.Key == Key.Right;
+                if(state.IsPressed)
+                {
+                    presseKeys.Add(state.Key);
+                }
+                else
+                {
+                    presseKeys.Remove(state.Key);
+                }
             }
         }
 
@@ -40,19 +44,34 @@ namespace GarouToremo
             ResetPositionHotkey = GetPressedKey();
         }
 
+        public void SetSaveCustomPositionHotkey()
+        {
+            SaveCustomPositionHotkey = GetPressedKey();
+        }
+
         public bool ResetPositionCenterPressed()
         {
-            return resetPositionKeyPressed && !leftArrowKeyPressed && !rightArrowKeyPressed;
+            return presseKeys.Contains(ResetPositionHotkey) && !presseKeys.Contains(Key.Left) && !presseKeys.Contains(Key.Right) && presseKeys.Contains(Key.Down);
         }
 
         public bool ResetPositionLeftPressed()
         {
-            return resetPositionKeyPressed && leftArrowKeyPressed && !rightArrowKeyPressed;
+            return presseKeys.Contains(ResetPositionHotkey) && presseKeys.Contains(Key.Left) && !presseKeys.Contains(Key.Right) && !presseKeys.Contains(Key.Down);
         }
 
-        public bool ResetPositionLRightPressed()
+        public bool ResetPositionRightPressed()
         {
-            return resetPositionKeyPressed && !leftArrowKeyPressed && rightArrowKeyPressed;
+            return presseKeys.Contains(ResetPositionHotkey) && !presseKeys.Contains(Key.Left) && presseKeys.Contains(Key.Right) && !presseKeys.Contains(Key.Down);
+        }
+
+        public bool ResetPositionCustomPressed()
+        {
+            return presseKeys.Contains(ResetPositionHotkey) && !presseKeys.Contains(Key.Left) && !presseKeys.Contains(Key.Right) && !presseKeys.Contains(Key.Down);
+        }
+
+        public bool SaveCustomPositionPressed()
+        {
+            return presseKeys.Contains(SaveCustomPositionHotkey);
         }
 
         private Key GetPressedKey()
