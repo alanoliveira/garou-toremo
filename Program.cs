@@ -102,7 +102,7 @@ namespace GarouToremo
                     if (hotkeyHandler.ResetPositionRightPressed())
                     {
                         overlay.InfoText = "Reset position - right";
-                        SetPlayersXPoistion(Cheats.POSITION_X_MAX - 10, Cheats.POSITION_X_MAX - 100, Cheats.POSITION_X_MAX_SCENARIO);
+                        SetPlayersXPoistion(Cheats.POSITION_X_MAX - 100, Cheats.POSITION_X_MAX - 10, Cheats.POSITION_X_MAX_SCENARIO);
                     }
 
                     if (hotkeyHandler.ResetPositionCustomPressed())
