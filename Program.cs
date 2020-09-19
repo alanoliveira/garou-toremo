@@ -40,7 +40,7 @@ namespace GarouToremo
         {
             overlay.Run();
             this.overlay.InfoText = "GarouToremo is running";
-            new Timer(CheatLoop, null, 0, FPS);
+            new Thread(this.CheatLoop).Start();
 
             string option = String.Empty;
             while (option != "q")
@@ -58,29 +58,32 @@ namespace GarouToremo
 
         private void CheatLoop(Object o)
         {
-            cheats.SetHp(Player.P1, Cheats.MAX_HP);
-            cheats.SetHp(Player.P2, Cheats.MAX_HP);
-            cheats.SetPower(Player.P1, Cheats.MAX_POWER);
-            cheats.SetPower(Player.P2, Cheats.MAX_POWER);
-            cheats.SetTime(Cheats.MAX_TIME);
-
-            byte currentP1Input = cheats.GetCurrentInputByte(Player.P1);
-            p1InputHistory.AddInput(currentP1Input);
-            overlay.effectiveInputsP1 = p1InputHistory.GetEffectiveInputs();
-
-            byte currentP2Input = cheats.GetCurrentInputByte(Player.P2);
-            p2InputHistory.AddInput(currentP2Input);
-            overlay.effectiveInputsP2 = p2InputHistory.GetEffectiveInputs();
-
-
-            if (hotkeyHandler != null)
+            while (true)
             {
-                hotkeyHandler.Update();
+                cheats.SetHp(Player.P1, Cheats.MAX_HP);
+                cheats.SetHp(Player.P2, Cheats.MAX_HP);
+                cheats.SetPower(Player.P1, Cheats.MAX_POWER);
+                cheats.SetPower(Player.P2, Cheats.MAX_POWER);
+                cheats.SetTime(Cheats.MAX_TIME);
 
-                if(hotkeyHandler.ResetPositionCenterPressed())
+                byte currentP1Input = cheats.GetCurrentInputByte(Player.P1);
+                p1InputHistory.AddInput(currentP1Input);
+                overlay.effectiveInputsP1 = p1InputHistory.GetEffectiveInputs();
+
+                byte currentP2Input = cheats.GetCurrentInputByte(Player.P2);
+                p2InputHistory.AddInput(currentP2Input);
+                overlay.effectiveInputsP2 = p2InputHistory.GetEffectiveInputs();
+
+
+                if (hotkeyHandler != null)
                 {
-                    BackToCenter();
-                    overlay.InfoText = "Position reseted to center";
+                    hotkeyHandler.Update();
+
+                    if (hotkeyHandler.ResetPositionCenterPressed())
+                    {
+                        BackToCenter();
+                        overlay.InfoText = "Position reseted to center";
+                    }
                 }
             }
         }
