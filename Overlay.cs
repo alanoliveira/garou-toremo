@@ -22,7 +22,6 @@ namespace GarouToremo
         const string GAROU_WINDOW_NAME = "Garou: Mark of the Wolves";
         const int FPS = 60;
         const int INFO_TEXT_TIME = 5 * FPS;
-        const int DEFAULT_FONT_SIZE = 20;
 
         private readonly StickyWindow window;
 

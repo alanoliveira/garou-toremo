@@ -9,9 +9,9 @@ namespace GarouToremo
         private Keyboard keyboard;
         private Key ResetPositionHotkey;
 
-        private bool ResetPositionKeyPressed;
-        private bool LeftArrowKeyPressed;
-        private bool RightArrowKeyPressed;
+        private bool resetPositionKeyPressed;
+        private bool leftArrowKeyPressed;
+        private bool rightArrowKeyPressed;
 
         public KeyboardHotkey()
         {
@@ -29,9 +29,9 @@ namespace GarouToremo
             var datas = keyboard.GetBufferedData();
             foreach (var state in datas)
             {
-                this.ResetPositionKeyPressed = state.IsPressed && state.Key == ResetPositionHotkey;
-                this.LeftArrowKeyPressed = state.IsPressed && state.Key == Key.Left;
-                this.RightArrowKeyPressed = state.IsPressed && state.Key == Key.Right;
+                this.resetPositionKeyPressed = state.IsPressed && state.Key == ResetPositionHotkey;
+                this.leftArrowKeyPressed = state.IsPressed && state.Key == Key.Left;
+                this.rightArrowKeyPressed = state.IsPressed && state.Key == Key.Right;
             }
         }
 
@@ -42,17 +42,17 @@ namespace GarouToremo
 
         public bool ResetPositionCenterPressed()
         {
-            return ResetPositionKeyPressed && !LeftArrowKeyPressed && !RightArrowKeyPressed;
+            return resetPositionKeyPressed && !leftArrowKeyPressed && !rightArrowKeyPressed;
         }
 
         public bool ResetPositionLeftPressed()
         {
-            return ResetPositionKeyPressed && LeftArrowKeyPressed && !RightArrowKeyPressed;
+            return resetPositionKeyPressed && leftArrowKeyPressed && !rightArrowKeyPressed;
         }
 
         public bool ResetPositionLRightPressed()
         {
-            return ResetPositionKeyPressed && !LeftArrowKeyPressed && RightArrowKeyPressed;
+            return resetPositionKeyPressed && !leftArrowKeyPressed && rightArrowKeyPressed;
         }
 
         private Key GetPressedKey()
