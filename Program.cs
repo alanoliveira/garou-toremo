@@ -68,6 +68,7 @@ namespace GarouToremo
         {
             while (true)
             {
+                Thread.Sleep(50);
                 cheats.SetHp(Player.P1, Cheats.MAX_HP);
                 cheats.SetHp(Player.P2, Cheats.MAX_HP);
                 cheats.SetPower(Player.P1, Cheats.MAX_POWER);
