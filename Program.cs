@@ -57,20 +57,11 @@ namespace GarouToremo
         {
             overlay.Run();
             this.overlay.InfoText = "GarouToremo is running";
-            new Thread(this.CheatLoop).Start();
+            Thread cheatLoop = new Thread(this.CheatLoop);
+            cheatLoop.Start();
 
-            string option = String.Empty;
-            while (option != "q")
-            {
-                Console.Clear();
-                Console.WriteLine("Enter m to menu or q to exit");
-                option = Console.ReadLine().ToLower();
-
-                if (option == "m")
-                {
-                    ShowMenu();
-                }
-            }
+            ShowMenu();
+            Environment.Exit(0);
         }
 
         private void CheatLoop(Object o)
@@ -200,21 +191,25 @@ namespace GarouToremo
 
         private void ShowMenu()
         {
-            Console.Clear();
-            Console.WriteLine("Enter:");
-            Console.WriteLine("1 - Toggle Show Inputs [{0}]", overlay.ShowInputHistory);
-            Console.WriteLine("2 - Set hotkeys");
-            Console.WriteLine("Any other key - Quit menu");
-            string option = Console.ReadLine();
-
-            switch (option)
+            string option = "";
+            while (option != "q")
             {
-                case "1":
-                    overlay.ShowInputHistory = !overlay.ShowInputHistory;
-                    break;
-                case "2":
-                    SetHotkeys();
-                    break;
+                Console.Clear();
+                Console.WriteLine("Enter:");
+                Console.WriteLine("1 - Toggle Show Inputs [{0}]", overlay.ShowInputHistory);
+                Console.WriteLine("2 - Set hotkeys");
+                Console.WriteLine("q - Quit");
+                option = Console.ReadLine();
+
+                switch (option)
+                {
+                    case "1":
+                        overlay.ShowInputHistory = !overlay.ShowInputHistory;
+                        break;
+                    case "2":
+                        SetHotkeys();
+                        break;
+                }
             }
         }
 
