@@ -9,6 +9,9 @@ namespace GarouToremo
 {
     class Program
     {
+        const string PROJECT_URL = "https://github.com/alanoliveira/garou-toremo";
+        const string PROJECT_NAME = "garou-toremo";
+        const string VERSION = "0.0.1";
         const int FPS = 120;
 
         Cheats cheats;
@@ -39,6 +42,7 @@ namespace GarouToremo
 
         public Program()
         {
+            Console.Title = String.Format("{0} - v {1}", PROJECT_NAME, VERSION);
             MemoryHandler mem = new MemoryHandler();
 
             if (!mem.OpenProcess("Garou")) {
@@ -56,7 +60,9 @@ namespace GarouToremo
         public void Run()
         {
             overlay.Run();
-            this.overlay.InfoText = "GarouToremo is running";
+            this.overlay.BotInfoText = "GarouToremo is running";
+            this.overlay.TopInfoText = String.Format("Project URL: {0}", PROJECT_URL);
+
             Thread cheatLoop = new Thread(this.CheatLoop);
             cheatLoop.Start();
 
@@ -90,31 +96,31 @@ namespace GarouToremo
 
                     if (hotkeyHandler.ResetPositionCenterPressed())
                     {
-                        overlay.InfoText = "Reset position - center";
+                        overlay.BotInfoText = "Reset position - center";
                         SetPlayersXPoistion(Cheats.POSITION_X_CENTER_P1, Cheats.POSITION_X_CENTER_P2, Cheats.POSITION_X_CENTER_SCENARIO);
                     }
 
                     if (hotkeyHandler.ResetPositionLeftPressed())
                     {
-                        overlay.InfoText = "Reset position - left";
+                        overlay.BotInfoText = "Reset position - left";
                         SetPlayersXPoistion(Cheats.POSITION_X_MIN + 10, Cheats.POSITION_X_MIN + 100, Cheats.POSITION_X_MIN_SCENARIO);
                     }
 
                     if (hotkeyHandler.ResetPositionRightPressed())
                     {
-                        overlay.InfoText = "Reset position - right";
+                        overlay.BotInfoText = "Reset position - right";
                         SetPlayersXPoistion(Cheats.POSITION_X_MAX - 100, Cheats.POSITION_X_MAX - 10, Cheats.POSITION_X_MAX_SCENARIO);
                     }
 
                     if (hotkeyHandler.ResetPositionCustomPressed())
                     {
-                        overlay.InfoText = "Reset position - custom";
+                        overlay.BotInfoText = "Reset position - custom";
                         SetPlayersXPoistion(customP1X, customP2X, customScenarioX);
                     }
 
                     if (hotkeyHandler.SaveCustomPositionPressed())
                     {
-                        overlay.InfoText = "Current position saved";
+                        overlay.BotInfoText = "Current position saved";
                         customP1X = cheats.GetPosition(Player.P1)[0];
                         customP2X = cheats.GetPosition(Player.P2)[0];
                         customScenarioX = cheats.GetScenarioPosition(Player.P2)[0];
@@ -126,13 +132,13 @@ namespace GarouToremo
                         {
                             state = State.PREPARING_REC;
                             inputHandler.InvertControls();
-                            overlay.InfoText = "Controls inverted";
+                            overlay.BotInfoText = "Controls inverted";
                         }
                         else if (state == State.PREPARING_REC)
                         {
                             state = State.RECORDING;
                             inputHandler.StartRecordInput();
-                            overlay.InfoText = String.Format("Record started on slot #{0}", currentSlot);
+                            overlay.BotInfoText = String.Format("Record started on slot #{0}", currentSlot);
                         }
                         else if (state == State.RECORDING)
                         {
@@ -140,7 +146,7 @@ namespace GarouToremo
                             inputHandler.StopRecordInput();
                             recordedInputSlots[currentSlot] = inputHandler.GetRecordedInput();
                             inputHandler.InvertControls();
-                            overlay.InfoText = String.Format("Input saved on slot #{0}", currentSlot);
+                            overlay.BotInfoText = String.Format("Input saved on slot #{0}", currentSlot);
                         }
                         Thread.Sleep(300);
                     }
@@ -151,20 +157,20 @@ namespace GarouToremo
                         {
                             if (!recordedInputSlots.ContainsKey(currentSlot))
                             {
-                                overlay.InfoText = String.Format("There is no input on slot #{0}", currentSlot);
+                                overlay.BotInfoText = String.Format("There is no input on slot #{0}", currentSlot);
                             }
                             else
                             {
                                 state = State.PLAYBACKING;
                                 inputHandler.StartPlaybackInput(recordedInputSlots[currentSlot]);
-                                overlay.InfoText = String.Format("Playbacking started on slot #{0}", currentSlot);
+                                overlay.BotInfoText = String.Format("Playbacking started on slot #{0}", currentSlot);
                             }
                         }
                         else if (state == State.PLAYBACKING)
                         {
                             state = State.IDLE;
                             inputHandler.StopPlaybackInput();
-                            overlay.InfoText = "Playback Stoped";
+                            overlay.BotInfoText = "Playback Stoped";
                         }
                         Thread.Sleep(300);
                     }
@@ -196,6 +202,7 @@ namespace GarouToremo
             while (option != "q")
             {
                 Console.Clear();
+                Console.WriteLine("Get the latest version at {0}", PROJECT_URL);
                 Console.WriteLine("Enter:");
                 Console.WriteLine("1 - Toggle Show Inputs [{0}]", overlay.ShowInputHistory);
                 Console.WriteLine("2 - Set hotkeys");

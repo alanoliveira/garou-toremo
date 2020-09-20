@@ -29,14 +29,26 @@ namespace GarouToremo
         private readonly Dictionary<string, Font> fonts;
         private readonly Dictionary<string, SolidBrush> brushes;
 
-        private int infoTextTimer;
-        private string _infoText;
-        public string InfoText
+        private int botInfoTextTimer;
+        private string _botInfoText;
+        public string BotInfoText
         {
-            get { return _infoText; }
+            get { return _botInfoText; }
             set {
-                infoTextTimer = INFO_TEXT_TIME;
-                _infoText = value; 
+                botInfoTextTimer = INFO_TEXT_TIME;
+                _botInfoText = value; 
+            }
+        }
+
+        private int topInfoTextTimer;
+        private string _topInfoText;
+        public string TopInfoText
+        {
+            get { return _topInfoText; }
+            set
+            {
+                topInfoTextTimer = INFO_TEXT_TIME;
+                _topInfoText = value;
             }
         }
 
@@ -99,9 +111,15 @@ namespace GarouToremo
 
         private void DrawInfoText(Graphics gfx)
         {
-            if(this.infoTextTimer > 0) {
-                gfx.DrawText(this.fonts["arial"], this.brushes["green"], 30, window.Height - 30, InfoText);
-                this.infoTextTimer--;
+            if(this.botInfoTextTimer > 0) {
+                gfx.DrawTextWithBackground(this.fonts["arial"], this.brushes["green"], this.brushes["black"], 30, window.Height - 30, BotInfoText);
+                this.botInfoTextTimer--;
+            }
+
+            if (this.topInfoTextTimer > 0)
+            {
+                gfx.DrawTextWithBackground(this.fonts["arial"], 30, this.brushes["green"], this.brushes["black"], 30, 30, TopInfoText);
+                this.topInfoTextTimer--;
             }
         }
 
