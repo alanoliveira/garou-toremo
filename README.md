@@ -71,3 +71,9 @@ After you recorded:
     - Improve command history visual
   - If I win in the lottery
     - Wakeup macros
+    
+## Powered by
+
+- **Memory.dll**: https://github.com/erfg12/memory.dll
+- **GameOverlay.Net**: https://github.com/michel-pi/GameOverlay.Net
+- **SharpDX.DirectInput**: https://github.com/sharpdx/SharpDX
