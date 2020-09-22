@@ -7,7 +7,6 @@
 **I don't know what are the policies of Steam / SNK / Code Mystics about it.**  
 **USE IT BY YOUR OWN RISK.**  
 
-
 ## About
 
 This is a tool that enable some training features in Garou Mark of the Wolves Steam edition.  
@@ -17,6 +16,15 @@ The main features are:
   - Record/Playback inputs
   - Reset position
 
+## Download
+
+### Self Contained
+- X86: https://github.com/alanoliveira/garou-toremo/releases/download/0.0.1/GarouToremo-self-contained-x86.exe (31.83 MB)
+- X64: https://github.com/alanoliveira/garou-toremo/releases/download/0.0.1/GarouToremo-self-contained-x64.exe (36.46 MB)
+
+### .Net Framework Dependent
+- X86: https://github.com/alanoliveira/garou-toremo/releases/download/0.0.1/GarouToremo-x86.exe (2.37 MB)
+- X64: https://github.com/alanoliveira/garou-toremo/releases/download/0.0.1/GarouToremo-x64.exe (2.69 MB)
 
 ## How to use
 
