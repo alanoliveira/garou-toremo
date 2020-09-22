@@ -168,14 +168,27 @@ namespace GarouToremo
                         }
                         else if (state == State.PLAYBACKING)
                         {
-                            state = State.IDLE;
-                            inputHandler.StopPlaybackInput();
-                            overlay.BotInfoText = "Playback Stoped";
+                            StopPlayback();
                         }
                         Thread.Sleep(300);
                     }
+                    if (state == State.PLAYBACKING)
+                    {
+                        byte currentPlaybackInput = inputHandler.GetCurrentPlaybackInputByte();
+                        if(currentPlaybackInput == 0x00)
+                        {
+                            StopPlayback();
+                        }
+                    }
                 }
             }
+        }
+
+        private void StopPlayback()
+        {
+            state = State.IDLE;
+            inputHandler.StopPlaybackInput();
+            overlay.BotInfoText = "Playback Stoped";
         }
 
         private void SetPlayersXPoistion(int p1X, int p2X, int scenarionX)

@@ -54,5 +54,10 @@ namespace GarouToremo
         {
             return this.Read2Byte(ptr.ToUInt32().ToString("X4"), file);
         }
+
+        public byte ReadByte(UIntPtr ptr, string file = "")
+        {
+            return (byte)this.ReadByte(ptr.ToUInt32().ToString("X4"), file);
+        }
     }
 }
