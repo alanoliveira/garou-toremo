@@ -21,7 +21,7 @@ namespace GarouToremo
         InputHistory p1InputHistory;
         InputHistory p2InputHistory;
         private State state = State.IDLE;
-        private Dictionary<int, byte[]> recordedInputSlots = new Dictionary<int, byte[]>();
+        private Dictionary<int, InputRecord> recordedInputSlots = new Dictionary<int, InputRecord>();
         private int currentSlot = 0;
         int customP1X = Cheats.POSITION_X_CENTER_P1;
         int customP2X = Cheats.POSITION_X_CENTER_P2;
@@ -72,6 +72,7 @@ namespace GarouToremo
 
         private void CheatLoop(Object o)
         {
+            InputRecord inputRecord = new InputRecord();
             while (true)
             {
                 Thread.Sleep(50);
@@ -138,13 +139,16 @@ namespace GarouToremo
                         {
                             state = State.RECORDING;
                             inputHandler.StartRecordInput();
+                            inputRecord = new InputRecord();
+                            inputRecord.PlayerSide = cheats.GetPlayerSide(Player.P2);
                             overlay.BotInfoText = String.Format("Record started on slot #{0}", currentSlot);
                         }
                         else if (state == State.RECORDING)
                         {
                             state = State.IDLE;
                             inputHandler.StopRecordInput();
-                            recordedInputSlots[currentSlot] = inputHandler.GetRecordedInput();
+                            inputRecord.Inputs = inputHandler.GetRecordedInput();
+                            recordedInputSlots[currentSlot] = inputRecord;
                             inputHandler.InvertControls();
                             overlay.BotInfoText = String.Format("Input saved on slot #{0}", currentSlot);
                         }
@@ -162,7 +166,7 @@ namespace GarouToremo
                             else
                             {
                                 state = State.PLAYBACKING;
-                                inputHandler.StartPlaybackInput(recordedInputSlots[currentSlot]);
+                                inputHandler.StartPlaybackInput(recordedInputSlots[currentSlot].GetInputCorrectedBySide(cheats.GetPlayerSide(Player.P2)));
                                 overlay.BotInfoText = String.Format("Playbacking started on slot #{0}", currentSlot);
                             }
                         }
