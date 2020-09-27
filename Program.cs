@@ -38,7 +38,31 @@ namespace GarouToremo
 
         static void Main(string[] args)
         {
-            new Program().Run();
+            try
+            {
+                new Program().Run();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error:");
+                if (e is ProcessNotAccessibleException)
+                {
+                    Console.WriteLine("Garou process is not accessible.");
+                    Console.WriteLine("Please be sure Garou is running and you are running this program as Administrator.");
+                }
+                else
+                {
+                    Console.WriteLine(e.Message);
+                    Console.WriteLine(e.StackTrace);
+                }
+
+                Console.WriteLine("Press enter to exit");
+                Console.Read();
+
+                Environment.Exit(1);
+            }
+
+            Environment.Exit(0);
         }
 
         public Program()
@@ -47,8 +71,7 @@ namespace GarouToremo
             MemoryHandler mem = new MemoryHandler();
 
             if (!mem.OpenProcess("Garou")) {
-                Console.WriteLine("Error to open Garou proccess. Is the game running?");
-                Environment.Exit(1);
+                throw new ProcessNotAccessibleException();
             }
 
             p1InputHistory = new InputHistory();
@@ -68,7 +91,6 @@ namespace GarouToremo
             cheatLoop.Start();
 
             ShowMenu();
-            Environment.Exit(0);
         }
 
         private void CheatLoop(Object o)
