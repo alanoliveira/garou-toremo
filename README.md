@@ -9,6 +9,7 @@
 
 ## About
 
+Video demonstration https://www.youtube.com/watch?v=1CelZkTmVqc  
 This is a tool that enable some training features in Garou Mark of the Wolves Steam edition.  
 The main features are:
 
@@ -19,12 +20,12 @@ The main features are:
 ## Download
 
 ### Self Contained
-- X86: https://github.com/alanoliveira/garou-toremo/releases/download/0.0.1/GarouToremo-self-contained-x86.exe (31.83 MB)
-- X64: https://github.com/alanoliveira/garou-toremo/releases/download/0.0.1/GarouToremo-self-contained-x64.exe (36.46 MB)
+- X86: https://github.com/alanoliveira/garou-toremo/releases/download/latest/GarouToremo-self-contained-x86.exe (31.83 MB)
+- X64: https://github.com/alanoliveira/garou-toremo/releases/download/latest/GarouToremo-self-contained-x64.exe (36.46 MB)
 
 ### .Net Framework Dependent
-- X86: https://github.com/alanoliveira/garou-toremo/releases/download/0.0.1/GarouToremo-x86.exe (2.37 MB)
-- X64: https://github.com/alanoliveira/garou-toremo/releases/download/0.0.1/GarouToremo-x64.exe (2.69 MB)
+- X86: https://github.com/alanoliveira/garou-toremo/releases/download/latest/GarouToremo-x86.exe (2.37 MB)
+- X64: https://github.com/alanoliveira/garou-toremo/releases/download/latest/GarouToremo-x64.exe (2.69 MB)
 =======
 
 ## How to use

@@ -12,7 +12,7 @@ namespace GarouToremo
     {
         const string PROJECT_URL = "https://github.com/alanoliveira/garou-toremo";
         const string PROJECT_NAME = "garou-toremo";
-        const string VERSION = "0.0.2-dev";
+        const string VERSION = "0.0.2";
         const int FPS = 120;
 
         Cheats cheats;
