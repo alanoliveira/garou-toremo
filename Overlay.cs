@@ -137,16 +137,16 @@ namespace GarouToremo
                 {
                     if (anchorPoint == AnchorPoint.LEFT)
                     {
-                        Point directionalStringSize = gfx.MeasureString(this.fonts["arial"], 20, inputString.DirectionalInput);
-                        DrawShadedText(gfx, this.fonts["arial"], 20, this.brushes["magenta"], this.brushes["black"], 1, x + 2, y + 2, anchorPoint, inputString.DirectionalInput);
-                        DrawShadedText(gfx, this.fonts["arial"], 14, this.brushes["magenta"], this.brushes["black"], 1, x + 2 + directionalStringSize.X, y + 10, anchorPoint, String.Join(' ', inputString.ButtonInputs));
+                        Point directionalStringSize = gfx.MeasureString(this.fonts["arial"], 30, inputString.DirectionalInput);
+                        DrawShadedText(gfx, this.fonts["arial"], 30, this.brushes["magenta"], this.brushes["black"], 1, x + 2, y + 2, anchorPoint, inputString.DirectionalInput);
+                        DrawShadedText(gfx, this.fonts["arial"], 20, this.brushes["magenta"], this.brushes["black"], 1, x + 2 + directionalStringSize.X, y + 13, anchorPoint, String.Join(' ', inputString.ButtonInputs));
                     }
                     else 
                     {
                         string buttonsString = String.Join(' ', inputString.ButtonInputs);
-                        Point buttonsStringSize = gfx.MeasureString(this.fonts["arial"], 14, buttonsString);
-                        DrawShadedText(gfx, this.fonts["arial"], 20, this.brushes["magenta"], this.brushes["black"], 1, x + 2 + buttonsStringSize.X, y + 2, anchorPoint, inputString.DirectionalInput);
-                        DrawShadedText(gfx, this.fonts["arial"], 14, this.brushes["magenta"], this.brushes["black"], 1, x + 2, y + 10, anchorPoint, buttonsString);
+                        Point buttonsStringSize = gfx.MeasureString(this.fonts["arial"], 20, buttonsString);
+                        DrawShadedText(gfx, this.fonts["arial"], 30, this.brushes["magenta"], this.brushes["black"], 1, x + 2 + buttonsStringSize.X, y + 2, anchorPoint, inputString.DirectionalInput);
+                        DrawShadedText(gfx, this.fonts["arial"], 20, this.brushes["magenta"], this.brushes["black"], 1, x + 2, y + 13, anchorPoint, buttonsString);
                     }
 
                 }

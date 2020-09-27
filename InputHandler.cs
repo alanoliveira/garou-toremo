@@ -156,6 +156,13 @@ namespace GarouToremo
             FreeInjectedFunction();
         }
 
+        public byte GetCurrentPlaybackInputByte()
+        {
+            int currentPosition = garouMem.Read2Byte(this.inputListMemory);
+            UIntPtr currentPositionAddress = UIntPtr.Add(this.inputListMemory, currentPosition);
+            return garouMem.ReadByte(currentPositionAddress);
+        }
+
         private void FreeInjectedFunction()
         {
             if (injectedFunction != UIntPtr.Zero)

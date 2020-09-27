@@ -143,5 +143,18 @@ namespace GarouToremo
         {
             garouMem.WriteBytes(ADDRESS_SCENARIO_X, BitConverter.GetBytes((short)x));
         }
+
+        public Side GetPlayerSide(Player player)
+        {
+            bool isP1Left = GetPosition(Player.P1)[0] > GetPosition(Player.P2)[0];
+            if (player == Player.P1)
+            {
+                return isP1Left ? Side.LEFT : Side.RIGHT;
+            }
+            else
+            {
+                return isP1Left ? Side.RIGHT : Side.LEFT;
+            }
+        }
     }
 }

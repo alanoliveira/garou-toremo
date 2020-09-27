@@ -7,7 +7,7 @@ namespace GarouToremo
 {
     class InputHistory
     {
-        private const int INPUT_QUEUE_SIZE = 50;
+        private const int INPUT_QUEUE_SIZE = 100;
 
         private FixedSizedQueue<byte> history;
 

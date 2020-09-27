@@ -3,6 +3,7 @@ using SharpDX.DirectInput;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading;
 
 namespace GarouToremo
@@ -11,7 +12,7 @@ namespace GarouToremo
     {
         const string PROJECT_URL = "https://github.com/alanoliveira/garou-toremo";
         const string PROJECT_NAME = "garou-toremo";
-        const string VERSION = "0.0.1";
+        const string VERSION = "0.0.2";
         const int FPS = 120;
 
         Cheats cheats;
@@ -21,7 +22,7 @@ namespace GarouToremo
         InputHistory p1InputHistory;
         InputHistory p2InputHistory;
         private State state = State.IDLE;
-        private Dictionary<int, byte[]> recordedInputSlots = new Dictionary<int, byte[]>();
+        private Dictionary<int, InputRecord> recordedInputSlots = new Dictionary<int, InputRecord>();
         private int currentSlot = 0;
         int customP1X = Cheats.POSITION_X_CENTER_P1;
         int customP2X = Cheats.POSITION_X_CENTER_P2;
@@ -37,7 +38,31 @@ namespace GarouToremo
 
         static void Main(string[] args)
         {
-            new Program().Run();
+            try
+            {
+                new Program().Run();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error:");
+                if (e is ProcessNotAccessibleException)
+                {
+                    Console.WriteLine("Garou process is not accessible.");
+                    Console.WriteLine("Please be sure Garou is running and you are running this program as Administrator.");
+                }
+                else
+                {
+                    Console.WriteLine(e.Message);
+                    Console.WriteLine(e.StackTrace);
+                }
+
+                Console.WriteLine("Press enter to exit");
+                Console.Read();
+
+                Environment.Exit(1);
+            }
+
+            Environment.Exit(0);
         }
 
         public Program()
@@ -46,8 +71,7 @@ namespace GarouToremo
             MemoryHandler mem = new MemoryHandler();
 
             if (!mem.OpenProcess("Garou")) {
-                Console.WriteLine("Error to open Garou proccess. Is the game running?");
-                Environment.Exit(1);
+                throw new ProcessNotAccessibleException();
             }
 
             p1InputHistory = new InputHistory();
@@ -67,19 +91,24 @@ namespace GarouToremo
             cheatLoop.Start();
 
             ShowMenu();
-            Environment.Exit(0);
         }
 
         private void CheatLoop(Object o)
         {
+            InputRecord inputRecord = new InputRecord();
+            Stopwatch sw = Stopwatch.StartNew();
             while (true)
             {
-                Thread.Sleep(50);
-                cheats.SetHp(Player.P1, Cheats.MAX_HP);
-                cheats.SetHp(Player.P2, Cheats.MAX_HP);
-                cheats.SetPower(Player.P1, Cheats.MAX_POWER);
-                cheats.SetPower(Player.P2, Cheats.MAX_POWER);
-                cheats.SetTime(Cheats.MAX_TIME);
+                Thread.Sleep(10);
+                if (sw.ElapsedMilliseconds > 1000)
+                {
+                    sw.Restart();
+                    cheats.SetHp(Player.P1, Cheats.MAX_HP);
+                    cheats.SetHp(Player.P2, Cheats.MAX_HP);
+                    cheats.SetPower(Player.P1, Cheats.MAX_POWER);
+                    cheats.SetPower(Player.P2, Cheats.MAX_POWER);
+                    cheats.SetTime(Cheats.MAX_TIME);
+                }
 
                 byte currentP1Input = inputHandler.GetCurrentInputByte(Player.P1);
                 p1InputHistory.AddInput(currentP1Input);
@@ -138,13 +167,16 @@ namespace GarouToremo
                         {
                             state = State.RECORDING;
                             inputHandler.StartRecordInput();
+                            inputRecord = new InputRecord();
+                            inputRecord.PlayerSide = cheats.GetPlayerSide(Player.P2);
                             overlay.BotInfoText = String.Format("Record started on slot #{0}", currentSlot);
                         }
                         else if (state == State.RECORDING)
                         {
                             state = State.IDLE;
                             inputHandler.StopRecordInput();
-                            recordedInputSlots[currentSlot] = inputHandler.GetRecordedInput();
+                            inputRecord.Inputs = inputHandler.GetRecordedInput();
+                            recordedInputSlots[currentSlot] = inputRecord;
                             inputHandler.InvertControls();
                             overlay.BotInfoText = String.Format("Input saved on slot #{0}", currentSlot);
                         }
@@ -153,6 +185,12 @@ namespace GarouToremo
 
                     if (hotkeyHandler.TogglePlaybackPressed())
                     {
+                        if (state == State.PREPARING_REC)
+                        {
+                            inputHandler.InvertControls();
+                            state = State.IDLE;
+                        }
+
                         if (state == State.IDLE)
                         {
                             if (!recordedInputSlots.ContainsKey(currentSlot))
@@ -162,20 +200,33 @@ namespace GarouToremo
                             else
                             {
                                 state = State.PLAYBACKING;
-                                inputHandler.StartPlaybackInput(recordedInputSlots[currentSlot]);
+                                inputHandler.StartPlaybackInput(recordedInputSlots[currentSlot].GetInputCorrectedBySide(cheats.GetPlayerSide(Player.P2)));
                                 overlay.BotInfoText = String.Format("Playbacking started on slot #{0}", currentSlot);
                             }
                         }
                         else if (state == State.PLAYBACKING)
                         {
-                            state = State.IDLE;
-                            inputHandler.StopPlaybackInput();
-                            overlay.BotInfoText = "Playback Stoped";
+                            StopPlayback();
                         }
                         Thread.Sleep(300);
                     }
+                    if (state == State.PLAYBACKING)
+                    {
+                        byte currentPlaybackInput = inputHandler.GetCurrentPlaybackInputByte();
+                        if(currentPlaybackInput == 0x00)
+                        {
+                            StopPlayback();
+                        }
+                    }
                 }
             }
+        }
+
+        private void StopPlayback()
+        {
+            state = State.IDLE;
+            inputHandler.StopPlaybackInput();
+            overlay.BotInfoText = "Playback Stoped";
         }
 
         private void SetPlayersXPoistion(int p1X, int p2X, int scenarionX)

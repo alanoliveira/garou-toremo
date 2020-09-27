@@ -9,6 +9,7 @@
 
 ## About
 
+Video demonstration https://www.youtube.com/watch?v=1CelZkTmVqc  
 This is a tool that enable some training features in Garou Mark of the Wolves Steam edition.  
 The main features are:
 
@@ -19,12 +20,13 @@ The main features are:
 ## Download
 
 ### Self Contained
-- X86: https://github.com/alanoliveira/garou-toremo/releases/download/0.0.1/GarouToremo-self-contained-x86.exe (31.83 MB)
-- X64: https://github.com/alanoliveira/garou-toremo/releases/download/0.0.1/GarouToremo-self-contained-x64.exe (36.46 MB)
+- X86: https://github.com/alanoliveira/garou-toremo/releases/download/latest/GarouToremo-self-contained-x86.exe (31.83 MB)
+- X64: https://github.com/alanoliveira/garou-toremo/releases/download/latest/GarouToremo-self-contained-x64.exe (36.46 MB)
 
 ### .Net Framework Dependent
-- X86: https://github.com/alanoliveira/garou-toremo/releases/download/0.0.1/GarouToremo-x86.exe (2.37 MB)
-- X64: https://github.com/alanoliveira/garou-toremo/releases/download/0.0.1/GarouToremo-x64.exe (2.69 MB)
+- X86: https://github.com/alanoliveira/garou-toremo/releases/download/latest/GarouToremo-x86.exe (2.37 MB)
+- X64: https://github.com/alanoliveira/garou-toremo/releases/download/latest/GarouToremo-x64.exe (2.69 MB)
+=======
 
 ## How to use
 
@@ -63,16 +65,11 @@ After you recorded:
   - Press **playback input hotkey** first time to start the playback
   - Press **playback input hotkey** second time to stop the playback
 
-\* For now the program is not stopping the playback automatically after it finishes, so you need to stop it manually every time.  
-
-
 ## Backlog
 
   - I will do
-    - Support side change in playback
     - Add cheat to toggle the TOP
   - Maybe
-    - Auto stop the playback
     - Improve joystick support
     - Display hitboxes
     - Save / Load config
@@ -85,3 +82,4 @@ After you recorded:
 - **Memory.dll**: https://github.com/erfg12/memory.dll
 - **GameOverlay.Net**: https://github.com/michel-pi/GameOverlay.Net
 - **SharpDX.DirectInput**: https://github.com/sharpdx/SharpDX
+
