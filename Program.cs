@@ -163,6 +163,12 @@ namespace GarouToremo
 
                     if (hotkeyHandler.TogglePlaybackPressed())
                     {
+                        if (state == State.PREPARING_REC)
+                        {
+                            inputHandler.InvertControls();
+                            state = State.IDLE;
+                        }
+
                         if (state == State.IDLE)
                         {
                             if (!recordedInputSlots.ContainsKey(currentSlot))
