@@ -3,6 +3,7 @@ using SharpDX.DirectInput;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading;
 
 namespace GarouToremo
@@ -73,14 +74,19 @@ namespace GarouToremo
         private void CheatLoop(Object o)
         {
             InputRecord inputRecord = new InputRecord();
+            Stopwatch sw = Stopwatch.StartNew();
             while (true)
             {
                 Thread.Sleep(10);
-                cheats.SetHp(Player.P1, Cheats.MAX_HP);
-                cheats.SetHp(Player.P2, Cheats.MAX_HP);
-                cheats.SetPower(Player.P1, Cheats.MAX_POWER);
-                cheats.SetPower(Player.P2, Cheats.MAX_POWER);
-                cheats.SetTime(Cheats.MAX_TIME);
+                if (sw.ElapsedMilliseconds > 1000)
+                {
+                    sw.Restart();
+                    cheats.SetHp(Player.P1, Cheats.MAX_HP);
+                    cheats.SetHp(Player.P2, Cheats.MAX_HP);
+                    cheats.SetPower(Player.P1, Cheats.MAX_POWER);
+                    cheats.SetPower(Player.P2, Cheats.MAX_POWER);
+                    cheats.SetTime(Cheats.MAX_TIME);
+                }
 
                 byte currentP1Input = inputHandler.GetCurrentInputByte(Player.P1);
                 p1InputHistory.AddInput(currentP1Input);
