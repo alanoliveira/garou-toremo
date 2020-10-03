@@ -10,7 +10,7 @@
 ## About
 
 Video demonstration https://www.youtube.com/watch?v=1CelZkTmVqc  
-This is a tool that enable some training features in Garou Mark of the Wolves Steam edition.  
+This is a tool that enable some training features in Garou Mark of the Wolves Code Mystics port.  
 The main features are:
 
   - Display input history
@@ -26,7 +26,10 @@ The main features are:
 ### .Net Framework Dependent
 - X86: https://github.com/alanoliveira/garou-toremo/releases/download/latest/GarouToremo-x86.exe (2.37 MB)
 - X64: https://github.com/alanoliveira/garou-toremo/releases/download/latest/GarouToremo-x64.exe (2.69 MB)
-=======
+
+
+\*If you don't know which one to to get, [GarouToremo-self-contained-x64.exe](https://github.com/alanoliveira/garou-toremo/releases/download/latest/GarouToremo-self-contained-x64.exe) is probably the one you want.
+
 
 ## How to use
 
